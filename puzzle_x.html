@@ -23,9 +23,9 @@
 
             // ピースを配置する。
             for (let i = 0; i < cell; i++) {
-                console.log(i + ": " + getx(i) + ', ' + gety(i));
+                console.log(i + ": " + getxOfImage(i) + ', ' + getyOfImage(i));
                 $('<div id="piece' + i + '" class="piece"></div>').css({
-                    backgroundPosition: '-' + getx(i) + 'px -' + gety(i) + 'px',
+                    backgroundPosition: '-' + getxOfImage(i) + 'px -' + getyOfImage(i) + 'px',
                     left: getx(pos[i]), top: gety(pos[i])
                 }).prependTo($('.center'));
             }
@@ -34,11 +34,11 @@
             // ピースをクリックしたとき
             $('.piece').click(function () {
                 let no = this.id.substring(5);
-                if (sel == no) {
+                if (sel === no) {
                     // 自分自身が選択されているときは選択をキャンセルする。
                     $(this).fadeTo(100, 1);
                     sel = -1;
-                } else if (sel == -1) {
+                } else if (sel === -1) {
                     // 何も選択されていないときは選択する。
                     $(this).fadeTo(100, 0.5);
                     sel = no;
@@ -47,9 +47,14 @@
                     swap(no, sel);
                     $('#piece' + sel).fadeTo(100, 1).animate({ left: getx(pos[sel]), top: gety(pos[sel]) });
                     $(this).animate({ left: getx(pos[no]), top: gety(pos[no]) }, function () {
+                        console.log('in the animation');
                         // アニメーション終了時にクリア判定する。
                         let clear = true;
-                        for (let i = 0; i < cell; i++) if (pos[i] != i) clear = false;
+                        for (let i = 0; i < cell; i++) {
+                            if (pos[i] !== i) clear = false;
+                            console.log(pos[i]);
+                        }
+                        console.log(clear);
                         if (clear) alert("クリア！");
                     });
                     sel = -1;
@@ -63,6 +68,9 @@
         // ピースの番号から座標を得る。
         function getx(n) { return (n % x) * common + windowsize - (width / 2); }
         function gety(n) { return Math.floor(n / x) * common; }
+
+        function getxOfImage(n) { return (n % x) * common;}
+        function getyOfImage(n) { return Math.floor(n / x) * common;}
 
         // ピースの配列を入れ替える。
         function swap(i, j) {
