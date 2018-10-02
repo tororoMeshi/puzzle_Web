@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.0/jquery.min.js"></script>
+    <script type="text/javascript">
+        let _URL = window.URL || window.webkitURL;
+        let sel = -1;    // 現在選択されているピース番号
+        let pos = [];   // 各ピースの現在位置
+        let url = 'pict.jpg';
+        let width = 320, height = 320;
+        let common = 80;
+        let cell = 16;
+        let x = 4, y = 4;
+
+        let puzzle = function () {
+            for (let i = 0; i < cell; i++) pos[i] = i;
+            // シャッフルする。
+            for (let i = cell; i > 0; i--) {
+                let j = Math.floor(Math.random() * i);
+                swap(i - 1, j);
+            }
+
+            // ピースを配置する。
+            for (let i = 0; i < cell; i++) {
+                console.log(i + ": " + getx(i) + ', ' + gety(i));
+                $('<div id="piece' + i + '" class="piece"></div>').css({
+                    backgroundPosition: '-' + getx(i) + 'px -' + gety(i) + 'px',
+                    left: getx(pos[i]), top: gety(pos[i])
+                }).prependTo($('.center'));
+            }
+            $('.piece').css({ 'margin-top': '100px', 'width': common, 'height': common, 'background-image': 'url(' + url + ')', 'position': 'absolute' });
+
+            // ピースをクリックしたとき
+            $('.piece').click(function () {
+                let no = this.id.substring(5);
+                if (sel == no) {
+                    // 自分自身が選択されているときは選択をキャンセルする。
+                    $(this).fadeTo(100, 1);
+                    sel = -1;
+                } else if (sel == -1) {
+                    // 何も選択されていないときは選択する。
+                    $(this).fadeTo(100, 0.5);
+                    sel = no;
+                } else {
+                    // 他のピースが選択されているときは入れ替える。
+                    swap(no, sel);
+                    $('#piece' + sel).fadeTo(100, 1).animate({ left: getx(pos[sel]), top: gety(pos[sel]) });
+                    $(this).animate({ left: getx(pos[no]), top: gety(pos[no]) }, function () {
+                        // アニメーション終了時にクリア判定する。
+                        let clear = true;
+                        for (let i = 0; i < cell; i++) if (pos[i] != i) clear = false;
+                        if (clear) alert("クリア！");
+                    });
+                    sel = -1;
+                }
+            });
+        };
+
+        $(puzzle);
+
+
+        // ピースの番号から座標を得る。
+        function getx(n) { return (n % x) * common + windowsize - (width / 2); }
+        function gety(n) { return Math.floor(n / x) * common; }
+
+        // ピースの配列を入れ替える。
+        function swap(i, j) {
+            let tmp = pos[i];
+            pos[i] = pos[j];
+            pos[j] = tmp;
+        }
+
+
+
+        //ウィンドウサイズを取得する
+        function getWindowSize() {
+
+
+            console.log(`ウィンドウサイズの横幅`);
+            console.log(window.innerWidth);
+
+            console.log(`ウィンドウサイズの高さ`);
+            console.log(window.innerHeight);
+
+            return window.innerWidth;
+        }
+
+        //ウィンドウサイズの取得
+        let windowsize = (getWindowSize() / 2);
+
+
+
+        $(document).ready(function () {
+
+            $("#file").change(function (e) {
+                let image, file;
+
+                if ((file = this.files[0])) {
+                    image = new Image();
+                    image.onload = function () {
+                        width = this.width;
+                        height = this.height;
+                        common = get_common_factor(width, height);
+                        x = Math.round(width / common);
+                        y = Math.round(height / common);
+                        cell = x * y;
+                        url = _URL.createObjectURL(file);
+                        console.log("image width: " + width);
+                        console.log("image height: " + height);
+                        console.log("common: " + common);
+                        console.log("x: " + x);
+                        console.log("y: " + y);
+                        console.log("url: " + url);
+                        $(puzzle);
+                    };
+                    image.src = _URL.createObjectURL(file)
+                }
+            })
+
+
+        });
+
+        function get_common_factor(width, height) {
+            if (height > width) {
+                let tmp = width;
+                width = height;
+                height = tmp;
+            }
+
+            if (width % height == 0) {
+                return height;
+            } else {
+                return get_common_factor(height, width % height);
+            }
+        }
+
+    </script>
+    <title>jigsaw puzzle</title>
+</head>
+
+<body>
+    <div id="wrapper">
+        <input type="file" accept="image/*" id="file">
+    </div>
+    <div class="center"></div>
+</body>
+
+</html>
