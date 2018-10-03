@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+        <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <script>
+        jQuery.event.add(window, "load", function () {
+            var sl = '.trimming img'; //リサイズしたい画像のクラス名
+            var fw = 600;        // サムネイルの幅
+            var fh = 500;        // サムネイルの高さ
+            var iw, ih;
+            $(sl).each(function () {
+                var w = $(this).width(); // 画像の幅(原寸)
+                var h = $(this).height(); // 画像の高さ(原寸)
+
+                //横長の画像の場合
+                if (w >= h) {
+                    iw = (fh / h * w - fw) / 2
+                    $(this).height(fh); //高さをサムネイルに合わせる
+                    $(this).css("top", 0);
+                    $(this).css("left", "-" + iw + "px");//画像のセンター合わせ
+                }
+
+                //縦長の画像の場合
+                else {
+                    ih = (fw / w * h - fh) / 2
+                    $(this).width(fw); //幅をサムネイルに合わせる
+                    $(this).css("top", "-" + ih + "px");//画像のセンター合わせ
+                    $(this).css("left", 0);
+                }
+            });
+        });
+    </script>
+    <style>
+        div.trimming {
+            width: 600px;
+            height: 500px;
+            overflow: hidden;
+            float: left;
+            }
+
+        .trimming img {
+            position: relative;
+        }
+
+        .cle {
+            clear: both;
+        }
+
+        /*float解除用*/
+    </style>
+</head>
+
+<body>
+    <div class="trimming">
+        <img src="06.jpg">
+    </div>
+    <div class="trimming">
+        <img src="abcd.jpg">
+    </div>
+    <div class="trimming">
+        <img src="ac.jpg">
+    </div>
+    <div class="cle"></div>
+</body>
+
+</html>
