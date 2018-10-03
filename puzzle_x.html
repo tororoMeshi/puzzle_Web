@@ -66,7 +66,7 @@
 
 
         // ピースの番号から座標を得る。
-        function getx(n) { return (n % x) * common + windowsize - (width / 2); }
+        function getx(n) { return (n % x) * common + windowSize - (width / 2); }
         function gety(n) { return Math.floor(n / x) * common; }
 
         function getxOfImage(n) { return (n % x) * common;}
@@ -81,21 +81,9 @@
 
 
 
-        //ウィンドウサイズを取得する
-        function getWindowSize() {
 
-
-            console.log(`ウィンドウサイズの横幅`);
-            console.log(window.innerWidth);
-
-            console.log(`ウィンドウサイズの高さ`);
-            console.log(window.innerHeight);
-
-            return window.innerWidth;
-        }
-
-        //ウィンドウサイズの取得
-        let windowsize = (getWindowSize() / 2);
+        //ウィンドウの横軸の真ん中をwindowsizeに代入
+        let windowSize = (window.innerWidth / 2);
 
 
 
