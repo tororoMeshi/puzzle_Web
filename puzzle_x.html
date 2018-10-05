@@ -13,6 +13,11 @@
         let cell = 16;
         let x = 4;
         let y = 4;
+        let maxHeight = 500;
+        let maxWidth = 600;
+        let ratio = 1;
+        let image;
+        let basePosition = [0, 0]
 
         let puzzle = function () {
             for (let i = 0; i < cell; i++) pos[i] = i;
@@ -23,10 +28,10 @@
             }
 
             // ピースを配置する
-            logletiables();
-
+            logVariables();
             for (let i = 0; i < cell; i++) {
-                console.log(i + ": " + getxOfImage(i) + ', ' + getyOfImage(i));
+                console.log("image position " + i + ": " + getxOfImage(i) + ', ' + getyOfImage(i));
+                console.log("real position " + i + ": " + getx(i) + ', ' + gety(i));
                 $('<div id="piece' + i + '" class="piece"></div>').css({
                     backgroundPosition: '-' + getxOfImage(i) + 'px -' + getyOfImage(i) + 'px',
                     left: getx(pos[i]), top: gety(pos[i])
@@ -69,11 +74,22 @@
 
 
         // ピースの番号から座標を得る。
-        function getx(n) { return (n % x) * common + windowSize - (width / 2); }
+        function getx(n) {
+            if (width > maxWidth) {
+                if (windowSize > width) {
+                    return (n % x) * common + (windowSize - maxWidth) / 2; 
+                } else {
+                    return (n % x) * common + (windowSize - maxWidth) / 2;
+                }
+            } else {
+                return (n % x) * common + (windowSize - width) / 2;
+            }
+        }
+
         function gety(n) { return Math.floor(n / x) * common; }
 
-        function getxOfImage(n) { return (n % x) * common;}
-        function getyOfImage(n) { return Math.floor(n / x) * common;}
+        function getxOfImage(n) { return (n % x) * common + basePosition[0];}
+        function getyOfImage(n) { return Math.floor(n / x) * common + basePosition[1];}
 
         // ピースの配列を入れ替える。
         function swap(i, j) {
@@ -84,7 +100,7 @@
 
 
         //ウィンドウの横軸の真ん中をwindowsizeに代入
-        let windowSize = (window.innerWidth / 2);
+        let windowSize = window.innerWidth;
 
 
 
@@ -93,19 +109,31 @@
             $(puzzle);
             
             $("#file").change(function (e) {
-                let image, file;
+                let file;
 
                 if ((file = this.files[0])) {
                     image = new Image();
                     image.onload = function () {
                         width = this.width;
                         height = this.height;
-                        common = decideCommon(width, height);
-                        x = Math.round(width / common);
-                        y = Math.round(height / common);
+                        basePosition[0] = 0;
+                        basePosition[1] = 0;
+
+                        if (width >= maxWidth && height >= maxHeight) {
+                            basePosition[0] = (width - maxWidth) / 2;
+                            basePosition[1] = (height - maxHeight) / 2;
+                            common = 100;
+                            x = Math.round(maxWidth / common);
+                            y = Math.round(maxHeight / common);
+                        } else {
+                            common = getCommon()
+                            x = Math.floor(width / common);
+                            y = Math.floor(height / common);
+                        }
+
                         cell = x * y;
                         url = _URL.createObjectURL(file);
-                        logletiables();
+                        logVariables();
                         $('.center').empty();
                         $(puzzle);
                     };
@@ -115,7 +143,44 @@
 
         });
 
-        function logletiables() {
+        function getCommon() {
+            let factorOfHeight = getFactor(height);
+            let factorOfWidth = getFactor(width);
+            let defaultCommon = 60;
+
+            let candidate = [];
+
+            for (let i = 0; i < factorOfHeight.length; i++) {
+                if (factorOfWidth.includes(factorOfHeight[i])) {
+                    candidate.push(factorOfHeight[i]);
+                }
+            }
+
+            for (let i = 0; i < candidate.length; i++) {
+                if (candidate[i] >= 60 && candidate[i] <= 80) {
+                    return candidate[i];
+                }
+            }
+
+            return defaultCommon;
+        }
+
+        function getFactor(range) {
+            let factor = [];
+
+            for (let i = 1; i <= Math.floor(Math.sqrt(range)); i++) {
+                
+                if (range % i == 0) {
+                    factor.push(i);
+                    factor.push(Math.round(range / i));
+                }
+            }
+
+            return factor;
+        }
+
+        function logVariables() {
+            console.log("window size: " + windowSize);
             console.log("image width: " + width); 
             console.log("image height: " + height);
             console.log("common: " + common);
@@ -123,28 +188,10 @@
             console.log("y: " + y);
             console.log("cell: " + cell);
             console.log("url: " + url);
+            console.log("baseWidth: " + basePosition[0]);
+            console.log("baseHeight" + basePosition[1])
         }
         
-        function decideCommon(width, height) {
-            let common = get_common_factor(width, height);
-            return common;
-
-        }
-
-        function get_common_factor(width, height) {
-            if (height > width) {
-                let tmp = width;
-                width = height;
-                height = tmp;
-            }
-
-            if (width % height == 0) {
-                return height;
-            } else {
-                return get_common_factor(height, width % height);
-            }
-        }
-
     </script>
     <title>jigsaw puzzle</title>
 </head>
