@@ -30,7 +30,7 @@
                 $('<div id="piece' + i + '" class="piece"></div>').css({
                     backgroundPosition: '-' + getxOfImage(i) + 'px -' + getyOfImage(i) + 'px',
                     left: getx(pos[i]), top: gety(pos[i])
-                }).prependTo($('.puzzle'));
+                }).appendTo($('.puzzle'));
             }
             $('.piece').css({ 'margin-top': '100px', 'width': common, 'height': common, 'background-image': 'url(' + url + ')', 'position': 'absolute' });
 
@@ -65,11 +65,7 @@
             });
         };
 
-<<<<<<< HEAD
 
-=======
-       
->>>>>>> a402bffe9d09334ddafb6ed6a8fa17eff65ccf31
 
 
         // ピースの番号から座標を得る。
@@ -95,11 +91,7 @@
         $(window).load(function () {
 
             $(puzzle);
-<<<<<<< HEAD
 
-=======
-            
->>>>>>> a402bffe9d09334ddafb6ed6a8fa17eff65ccf31
             $("#file").change(function (e) {
                 let image, file;
 
@@ -114,11 +106,7 @@
                         cell = x * y;
                         url = _URL.createObjectURL(file);
                         logletiables();
-<<<<<<< HEAD
                         $('.puzzle').empty();
-=======
-                        $('.center').empty();
->>>>>>> a402bffe9d09334ddafb6ed6a8fa17eff65ccf31
                         $(puzzle);
                     };
                     image.src = _URL.createObjectURL(file);
@@ -128,11 +116,7 @@
         });
 
         function logletiables() {
-<<<<<<< HEAD
             console.log("image width: " + width);
-=======
-            console.log("image width: " + width); 
->>>>>>> a402bffe9d09334ddafb6ed6a8fa17eff65ccf31
             console.log("image height: " + height);
             console.log("common: " + common);
             console.log("x: " + x);
@@ -140,11 +124,7 @@
             console.log("cell: " + cell);
             console.log("url: " + url);
         }
-<<<<<<< HEAD
 
-=======
-        
->>>>>>> a402bffe9d09334ddafb6ed6a8fa17eff65ccf31
         function decideCommon(width, height) {
             let common = get_common_factor(width, height);
             return common;
@@ -171,9 +151,7 @@
             position: absolute;
             top: 10px;
             left: 40%;
-            
             margin: auto;
-
         }
     </style>
     <title>jigsaw puzzle</title>
