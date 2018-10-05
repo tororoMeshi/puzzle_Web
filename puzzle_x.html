@@ -35,7 +35,7 @@
                 $('<div id="piece' + i + '" class="piece"></div>').css({
                     backgroundPosition: '-' + getxOfImage(i) + 'px -' + getyOfImage(i) + 'px',
                     left: getx(pos[i]), top: gety(pos[i])
-                }).prependTo($('.center'));
+                }).appendTo($('.puzzle'));
             }
             $('.piece').css({ 'margin-top': '100px', 'width': common, 'height': common, 'background-image': 'url(' + url + ')', 'position': 'absolute' });
 
@@ -70,7 +70,7 @@
             });
         };
 
-       
+
 
 
         // ピースの番号から座標を得る。
@@ -91,6 +91,7 @@
         function getxOfImage(n) { return (n % x) * common + basePosition[0];}
         function getyOfImage(n) { return Math.floor(n / x) * common + basePosition[1];}
 
+
         // ピースの配列を入れ替える。
         function swap(i, j) {
             let tmp = pos[i];
@@ -107,7 +108,7 @@
         $(window).load(function () {
 
             $(puzzle);
-            
+
             $("#file").change(function (e) {
                 let file;
 
@@ -133,8 +134,9 @@
 
                         cell = x * y;
                         url = _URL.createObjectURL(file);
-                        logVariables();
-                        $('.center').empty();
+                        logletiables();
+                        $('.puzzle').empty();
+
                         $(puzzle);
                     };
                     image.src = _URL.createObjectURL(file);
@@ -142,6 +144,7 @@
             })
 
         });
+
 
         function getCommon() {
             let factorOfHeight = getFactor(height);
@@ -191,16 +194,26 @@
             console.log("baseWidth: " + basePosition[0]);
             console.log("baseHeight" + basePosition[1])
         }
-        
+
     </script>
+    <style>
+        .center {
+            position: absolute;
+            top: 10px;
+            left: 40%;
+            margin: auto;
+        }
+    </style>
     <title>jigsaw puzzle</title>
 </head>
 
 <body>
-    <div id="wrapper">
-        <input type="file" accept="image/*" id="file">
+    <div class="center">
+        <div id="wrapper">
+            <input type="file" accept="image/*" id="file">
+        </div>
     </div>
-    <div class="center"></div>
+    <div class="puzzle"></div>
 </body>
 
 </html>
