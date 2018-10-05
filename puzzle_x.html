@@ -11,7 +11,8 @@
         let width = 320, height = 320;
         let common = 80;
         let cell = 16;
-        let x = 4, y = 4;
+        let x = 4;
+        let y = 4;
 
         let puzzle = function () {
             for (let i = 0; i < cell; i++) pos[i] = i;
@@ -21,13 +22,15 @@
                 swap(i - 1, j);
             }
 
-            // ピースを配置する。
+            // ピースを配置する
+            logletiables();
+
             for (let i = 0; i < cell; i++) {
                 console.log(i + ": " + getxOfImage(i) + ', ' + getyOfImage(i));
                 $('<div id="piece' + i + '" class="piece"></div>').css({
                     backgroundPosition: '-' + getxOfImage(i) + 'px -' + getyOfImage(i) + 'px',
                     left: getx(pos[i]), top: gety(pos[i])
-                }).prependTo($('.center'));
+                }).prependTo($('.puzzle'));
             }
             $('.piece').css({ 'margin-top': '100px', 'width': common, 'height': common, 'background-image': 'url(' + url + ')', 'position': 'absolute' });
 
@@ -62,15 +65,15 @@
             });
         };
 
-        $(puzzle);
+
 
 
         // ピースの番号から座標を得る。
-        function getx(n) { return (n % x) * common + windowsize - (width / 2); }
+        function getx(n) { return (n % x) * common + windowSize - (width / 2); }
         function gety(n) { return Math.floor(n / x) * common; }
 
-        function getxOfImage(n) { return (n % x) * common;}
-        function getyOfImage(n) { return Math.floor(n / x) * common;}
+        function getxOfImage(n) { return (n % x) * common; }
+        function getyOfImage(n) { return Math.floor(n / x) * common; }
 
         // ピースの配列を入れ替える。
         function swap(i, j) {
@@ -80,26 +83,14 @@
         }
 
 
-
-        //ウィンドウサイズを取得する
-        function getWindowSize() {
-
-
-            console.log(`ウィンドウサイズの横幅`);
-            console.log(window.innerWidth);
-
-            console.log(`ウィンドウサイズの高さ`);
-            console.log(window.innerHeight);
-
-            return window.innerWidth;
-        }
-
-        //ウィンドウサイズの取得
-        let windowsize = (getWindowSize() / 2);
+        //ウィンドウの横軸の真ん中をwindowsizeに代入
+        let windowSize = (window.innerWidth / 2);
 
 
 
-        $(document).ready(function () {
+        $(window).load(function () {
+
+            $(puzzle);
 
             $("#file").change(function (e) {
                 let image, file;
@@ -109,25 +100,36 @@
                     image.onload = function () {
                         width = this.width;
                         height = this.height;
-                        common = get_common_factor(width, height);
+                        common = decideCommon(width, height);
                         x = Math.round(width / common);
                         y = Math.round(height / common);
                         cell = x * y;
                         url = _URL.createObjectURL(file);
-                        console.log("image width: " + width);
-                        console.log("image height: " + height);
-                        console.log("common: " + common);
-                        console.log("x: " + x);
-                        console.log("y: " + y);
-                        console.log("url: " + url);
+                        logletiables();
+                        $('.puzzle').empty();
                         $(puzzle);
                     };
-                    image.src = _URL.createObjectURL(file)
+                    image.src = _URL.createObjectURL(file);
                 }
             })
 
-
         });
+
+        function logletiables() {
+            console.log("image width: " + width);
+            console.log("image height: " + height);
+            console.log("common: " + common);
+            console.log("x: " + x);
+            console.log("y: " + y);
+            console.log("cell: " + cell);
+            console.log("url: " + url);
+        }
+
+        function decideCommon(width, height) {
+            let common = get_common_factor(width, height);
+            return common;
+
+        }
 
         function get_common_factor(width, height) {
             if (height > width) {
@@ -144,14 +146,26 @@
         }
 
     </script>
+    <style>
+        .center {
+            position: absolute;
+            top: 10px;
+            left: 40%;
+            
+            margin: auto;
+
+        }
+    </style>
     <title>jigsaw puzzle</title>
 </head>
 
 <body>
-    <div id="wrapper">
-        <input type="file" accept="image/*" id="file">
+    <div class="center">
+        <div id="wrapper">
+            <input type="file" accept="image/*" id="file">
+        </div>
     </div>
-    <div class="center"></div>
+    <div class="puzzle"></div>
 </body>
 
 </html>
