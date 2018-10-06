@@ -18,6 +18,7 @@
         let ratio = 1;
         let image;
         let basePosition = [0, 0]
+        let windowSize = window.innerWidth;  //ウィンドウの横軸windowSizeに代入
 
         let puzzle = function () {
             for (let i = 0; i < cell; i++) pos[i] = i;
@@ -63,7 +64,11 @@
                             console.log(pos[i]);
                         }
                         console.log(clear);
-                        if (clear) alert("クリア！");
+                        if (clear) {
+                            sleep(0.1,function(){
+                                alert("クリア！");
+                            })
+                        }
                     });
                     sel = -1;
                 }
@@ -97,9 +102,6 @@
             pos[j] = tmp;
         }
 
-
-        //ウィンドウの横軸の真ん中をwindowsizeに代入
-        let windowSize = window.innerWidth;
 
 
 
@@ -178,6 +180,21 @@
             }
 
             return factor;
+        }
+
+        function sleep(waitSec, callbackFunc){
+            let spanedSec = 0;// 経過時間(秒)
+
+            let id = setInterval(function(){
+                spanedSec = spanedSec + 0.1;
+
+                if(spanedSec >= waitSec){
+                    clearInterval(id);
+
+                    if(callbackFunc) callbackFunc();
+                }
+            }, 100);
+
         }
 
         function logLetiables() {
