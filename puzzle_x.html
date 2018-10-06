@@ -16,7 +16,7 @@
         let maxHeight = 500;
         let maxWidth = 600;
         let ratio = 1;
-        let image;
+        let image, originalImage;
         let basePosition = [0, 0]
         let windowSize = window.innerWidth;  //ウィンドウの横軸windowSizeに代入
 
@@ -40,6 +40,19 @@
             }
             $('.piece').css({ 'margin-top': '100px', 'width': common, 'height': common, 'background-image': 'url(' + url + ')', 'position': 'absolute' });
 
+            originalImage = new Image();
+            originalImage.src = url;
+
+            if (originalImage.width >= maxWidth && originalImage.height >= maxHeight) {
+                originalImage.width = maxWidth;
+                originalImage.height = maxHeight;
+            } else {
+                originalImage.width = width;
+                originalImage.height = height;
+            }
+            $(originalImage).css({'margin-top': '50px'});
+            $(originalImage).appendTo($('.original'));
+            
             // ピースをクリックしたとき
             $('.piece').click(function () {
                 let no = this.id.substring(5);
@@ -227,7 +240,6 @@
 
 <body>
     <link rel="stylesheet" type="text/css" href="jigsaw.css" />
-    <div class="puzzle"></div>
         <div id="headline">
             <h1>jigsaw pazzle</h1>
         </div>
@@ -242,5 +254,7 @@
     <div id="wrapper">
             <input type="file" accept="image/*" id="file">
         </div>
+    <div class="puzzle"></div>
+    <div class="original"></div>
 </body>
 </html>
