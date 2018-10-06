@@ -219,19 +219,28 @@
         }
         .puzzle{
             position: absolute;
-            top: -40px;
+            top: 40px;
         }
     </style>
     <title>jigsaw puzzle</title>
 </head>
 
 <body>
-    <div class="center">
-        <div id="wrapper">
+    <link rel="stylesheet" type="text/css" href="jigsaw.css" />
+    <div class="puzzle"></div>
+        <div id="headline">
+            <h1>jigsaw pazzle</h1>
+        </div>
+    <div id="pagebody">
+            <div id="menu"><h3>Menu</h3></div>
+            <ul id="menu_body">
+                <li id="menu1"><a href="http://www2.linux.it.teu.ac.jp/linux/">About LC</a></li>
+                <li id="menu2"><a href="https://lc-tut.github.io/">LC BLOG</a></li>
+                <li id="menu2"><a href="https://twitter.com/lc_tut?ref_src=twsrc%5Etfw%7Ctwcamp%5Eembeddedtimeline%7Ctwterm%5Eprofile%3Alc_tut&ref_url=http%3A%2F%2Fwww2.linux.it.teu.ac.jp%2Flinux%2F">Twitter</a></li>
+            </ul>
+        </div>
+    <div id="wrapper">
             <input type="file" accept="image/*" id="file">
         </div>
-    </div>
-    <div class="puzzle"></div>
 </body>
-
 </html>
