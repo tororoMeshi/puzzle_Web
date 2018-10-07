@@ -16,8 +16,9 @@
         let maxHeight = 500;
         let maxWidth = 600;
         let ratio = 1;
-        let image;
+        let image, originalImage;
         let basePosition = [0, 0]
+        let windowSize = window.innerWidth;  //ウィンドウの横軸windowSizeに代入
 
         let puzzle = function () {
             for (let i = 0; i < cell; i++) pos[i] = i;
@@ -37,8 +38,23 @@
                     left: getx(pos[i]), top: gety(pos[i])
                 }).appendTo($('.puzzle'));
             }
-            $('.piece').css({ 'margin-top': '100px', 'width': common, 'height': common, 'background-image': 'url(' + url + ')', 'position': 'absolute' });
+            $('.piece').css({ 'margin-top': '50px', 'width': common, 'height': common, 'background-image': 'url(' + url + ')', 'position': 'absolute' });
 
+            originalImage = new Image();
+            originalImage.src = url;
+
+            if (originalImage.width >= maxWidth && originalImage.height >= maxHeight) {
+                originalImage.width = maxWidth;
+                originalImage.height = maxHeight;
+            } else {
+                originalImage.width = width;
+                originalImage.height = height;
+            }
+            originalImage.width = 250;
+            originalImage.height = 250;
+            $('.original').empty();
+            $(originalImage).appendTo($('.original'));
+            
             // ピースをクリックしたとき
             $('.piece').click(function () {
                 let no = this.id.substring(5);
@@ -63,7 +79,11 @@
                             console.log(pos[i]);
                         }
                         console.log(clear);
-                        if (clear) alert("クリア！");
+                        if (clear) {
+                            sleep(0.1,function(){
+                                alert("クリア！");
+                            })
+                        }
                     });
                     sel = -1;
                 }
@@ -98,9 +118,6 @@
         }
 
 
-        //ウィンドウの横軸の真ん中をwindowsizeに代入
-        let windowSize = window.innerWidth;
-
 
 
         $(window).load(function () {
@@ -123,6 +140,16 @@
                             basePosition[1] = (height - maxHeight) / 2;
                             common = 100;
                             x = Math.round(maxWidth / common);
+                            y = Math.round(maxHeight / common);
+                        } else if (width >= maxWidth && height < maxHeight) {
+                            basePosition[0] = (width - maxWidth) / 2;
+                            common = 100;
+                            x = Math.round(maxWidth / common);
+                            y = Math.floor(height / common);
+                        } else if (width < maxWidth && height >= maxHeight) {
+                            basePosition[1] = (height - maxHeight) / 2;
+                            common = 100;
+                            x = Math.floor(width / common);
                             y = Math.round(maxHeight / common);
                         } else {
                             common = getCommon()
@@ -180,6 +207,21 @@
             return factor;
         }
 
+        function sleep(waitSec, callbackFunc){
+            let spanedSec = 0;// 経過時間(秒)
+
+            let id = setInterval(function(){
+                spanedSec = spanedSec + 0.1;
+
+                if(spanedSec >= waitSec){
+                    clearInterval(id);
+
+                    if(callbackFunc) callbackFunc();
+                }
+            }, 100);
+
+        }
+
         function logLetiables() {
             console.log("window size: " + windowSize);
             console.log("image width: " + width);
@@ -202,19 +244,40 @@
         }
         .puzzle{
             position: absolute;
-            top: -40px;
+            top: 10px;
+        }
+
+        .original {
+            position: absolute;
+            width: 0px;
+            height: 0px;
+            top: 290px;
+        }
+
+        .wrapper {
+            height: 400px;
         }
     </style>
     <title>jigsaw puzzle</title>
 </head>
 
 <body>
-    <div class="center">
-        <div id="wrapper">
+    <link rel="stylesheet" type="text/css" href="jigsaw.css" />
+        <div id="headline">
+            <h1>jigsaw pazzle</h1>
+        </div>
+    <div id="pagebody">
+            <div id="menu"><h3>Menu</h3></div>
+            <ul id="menu_body">
+                <li id="menu1"><a href="http://www2.linux.it.teu.ac.jp/linux/">About LC</a></li>
+                <li id="menu2"><a href="https://lc-tut.github.io/">LC BLOG</a></li>
+                <li id="menu2"><a href="https://twitter.com/lc_tut?ref_src=twsrc%5Etfw%7Ctwcamp%5Eembeddedtimeline%7Ctwterm%5Eprofile%3Alc_tut&ref_url=http%3A%2F%2Fwww2.linux.it.teu.ac.jp%2Flinux%2F">Twitter</a></li>
+            </ul>
+        </div>
+    <div id="wrapper">
             <input type="file" accept="image/*" id="file">
         </div>
-    </div>
     <div class="puzzle"></div>
+    <div class="original"></div>
 </body>
-
 </html>
