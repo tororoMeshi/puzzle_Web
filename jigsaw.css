@@ -1,0 +1,24 @@
+body {
+	background: linear-gradient(45deg,#F0FFFF, #1E00FF);
+}
+
+#headline {
+    color: orange;
+}
+
+ul#menu_body li {
+	list-style-type:none;
+	padding: 5px;
+	width: 15%;
+	text-align: center;
+}
+
+ul#menu_body li a {
+	display:block;
+    background-color:#eeeeee;
+	text-decoration:none;
+}
+
+ul#menu_body li a:hover {
+	background-color:#ffffff;
+}
